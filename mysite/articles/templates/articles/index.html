@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>메인 페이지 입니다.</h1>
+<hr>
+<a href="{% url 'articles:create' %}">[CREATE]</a>
+<hr>
+{% for article in articles %}
+ <p>{{ article.pk }}번째 글</p>
+ <p>{{ article.title }}</p>
+ <p>댓글 개수 : {{ article.comment_set.all|length }}</p>
+ <a href="{% url 'articles:detail' article.pk %}">[DETAIL]</a>
+ <hr>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>상세 페이지</h1>
+<hr>
+<p>{{ article.pk }}번째 글</p>
+<h2>{{ article.title }}</h2>
+<h3>{{ article.content }}</h3>
+<hr>
+<p>{{ comments|length }}개의 댓글</p>
+<!-- <p>{{ article.comment_set.all|length }}</p> -->
+<ul>
+  {% for comment in comments %}
+  <li>
+    {{ comment.content }}
+                                          <!-- 2개 이상의 값을 넘겨주고자 할 때 순서 주의 -->
+    <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST"> 
+      {% csrf_token %} 
+      <input type="submit" value="댓글삭제">
+    </form>
+  </li>
+  {% empty %}
+    <p>댓글이 없습니다.</p>
+  {% endfor %}
+</ul>
+<hr>
+<form action="{% url 'articles:comment_create' article.pk %}" method="POST">
+  {% csrf_token %}
+  {{ comment_form }}
+  <input type="submit" value="댓글생성">
+</form>
+<hr>
+<a href="{% url 'articles:update' article.pk %}">[UPDATE]</a>
+<a href="{% url 'articles:index' %}">[back]</a>
+<form action="{% url 'articles:delete' article.pk %}" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="DELETE" class="btn btn-primary">
+</form>
+
+{% endblock %}
