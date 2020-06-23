@@ -9,6 +9,22 @@
 </head>
 <body>
   <div class="container">
+    <div style="float: right;">
+      <h1>{{ user.username }}</h1>
+      {% if user.is_authenticated %}
+      <!-- a 태그는 GET 방식 -->
+        <a href="{% url 'accounts:logout' %}">[로그아웃]</a>
+        <a href="{% url 'accounts:update' %}">[회원정보 수정]</a>
+        <a href="{% url 'accounts:change_password' %}">[비밀번호 변경]</a>
+        <form action="{% url 'accounts:delete' %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="회원 탈퇴">
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">[로그인]</a>
+        <a href="{% url 'accounts:signup' %}">[회원가입]</a>
+      {% endif %}
+    </div>
     {% block body %}
     {% endblock %}
   </div>

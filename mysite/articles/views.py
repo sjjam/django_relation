@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # DVDH
 # django가 주는 views에서 쓸 decorators http를 위한
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
 
@@ -26,6 +27,7 @@ def detail(request, article_pk):
     }
     return render(request, 'articles/detail.html', context)
 
+@login_required
 def create(request):
     if request.method == "POST":
         form = ArticleForm(request.POST)
@@ -39,6 +41,7 @@ def create(request):
     }
     return render(request, 'articles/form.html', context)
 
+@login_required
 def update(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.method == "POST":
@@ -53,6 +56,7 @@ def update(request, article_pk):
     }
     return render(request, 'articles/form.html', context)
 
+@login_required
 def delete(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.method == "POST":
@@ -62,27 +66,34 @@ def delete(request, article_pk):
 
 @require_POST
 def comment_create(request, article_pk):
-    article = get_object_or_404(Article, pk=article_pk)
-    # if request.method == "POST":
-    comment_form = CommentForm(request.POST)
-    if comment_form.is_valid():
-        comment = comment_form.save(commit=False)
-        comment.article = article
-        # comment_article_id = article.pk
-        comment.save()
-        return redirect('articles:detail', article.pk)
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk=article_pk)
+        # if request.method == "POST":
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.article = article
+            # comment_article_id = article.pk
+            comment.save()
+            return redirect('articles:detail', article.pk)
+        else:
+            # comment_form = CommentForm()
+            context = {
+                'comment_form' : comment_form,
+                'article' : article
+            }
+        return redirect('articles : detail', context)
     else:
-        # comment_form = CommentForm()
-        context = {
-            'comment_form' : comment_form,
-            'article' : article
-        }
-    return redirect('articles : detail', context)
+        return redirect('accounts:login')
+
 
 @require_POST
 def comment_delete(request, article_pk, comment_pk):
-    # comment = Comment.objects.get(pk=comment_pk)
-    comment = get_object_or_404(Comment, pk=comment_pk)
-    # if request.method == "POST": @require_POST 사용하므로 필요 없음
-    comment.delete()
-    return redirect('articles:detail', article_pk)
+    if request.user.is_authenticated:
+        # comment = Comment.objects.get(pk=comment_pk)
+        comment = get_object_or_404(Comment, pk=comment_pk)
+        # if request.method == "POST": @require_POST 사용하므로 필요 없음
+        comment.delete()
+        return redirect('articles:detail', article_pk)
+    else:
+        return redirect('accounts:login')
