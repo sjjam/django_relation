@@ -27,6 +27,7 @@
   {% empty %}
     <p>댓글이 없습니다.</p>
   {% endfor %}
+  {% include 'articles/_like.html' %}
 </ul>
 <hr>
 <form action="{% url 'articles:comment_create' article.pk %}" method="POST">

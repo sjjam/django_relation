@@ -1,15 +1,4 @@
-{% extends 'base.html' %}
-{% block body %}
-<h1>메인 페이지 입니다.</h1>
-<hr>
-<a href="{% url 'articles:create' %}" class="btn btn-primary">[CREATE]</a>
-<hr>
-{% for article in articles %}
- <p>{{ article.pk }}번째 글</p>
- <p>작성자 : {{ article.user.username }}</p>
- <p>{{ article.title }}</p>
- <p>댓글 개수 : {{ article.comment_set.all|length }}</p>
- <!-- {% if user in article.like_users.all %}
+{% if user in article.like_users.all %}
   <a href="{% url 'articles:like' article.pk %}">
     <i class="far fa-heart fa-lg text-danger"></i>
   </a>
@@ -30,9 +19,4 @@
   </a>
  {% endif %}
  추천  수 : {{ article.recommend.all|length }}
- <br> -->
- {% include 'articles/_like.html' %}
- <a href="{% url 'articles:detail' article.pk %}">[DETAIL]</a>
- <hr>
-{% endfor %}
-{% endblock %}
+ <br>
