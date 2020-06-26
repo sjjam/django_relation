@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% block body %}
-<h1>{{ person.username }}</h1>
+<h1>{{ person.username }} {{ person.pk }}</h1>
+<!-- 팔로우 로직 구현 -->
+{% if user != person %}<!-- 본인일때는 팔로우 안보이도록 -->
+{% if user in person.followers.all %}
+<a href="{% url 'accounts:follow' person.pk %}">팔로우 취소</a>
+{% else %}
+<a href="{% url 'accounts:follow' person.pk %}">팔로우</a>
+{% endif %}
+{% endif %}
 <!-- 유저가 작성한 모든 게시물 -->
 <p>유저가 작성한 게시글들</p>
 <ul>

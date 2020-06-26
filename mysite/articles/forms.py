@@ -4,7 +4,7 @@ from .models import Article, Comment
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        exclude = ['user','like_users']
+        exclude = ['user','like_users', 'recommend']
 
 class CommentForm(forms.ModelForm):
     class Meta:
