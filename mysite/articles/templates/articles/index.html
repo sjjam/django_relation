@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block body %}
+{% load static %}
 <h1>메인 페이지 입니다.</h1>
 <hr>
 <a href="{% url 'articles:create' %}" class="btn btn-primary">[CREATE]</a>
@@ -38,4 +39,6 @@
 {% for num in articles.paginator.page_range %}
 <a href="{% url 'articles:index' %}?page={{ num }}">{{ num }}</a>
 {% endfor %}
+
+  <script src="{% static 'articles/js/like.js' %}"></script>
 {% endblock %}

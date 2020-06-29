@@ -8,6 +8,7 @@ from .forms import ArticleForm, CommentForm
 from django.contrib import messages
 from django.urls import resolve
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
@@ -132,9 +133,15 @@ def like(request, article_pk):
     # 사용자가 게시글의 좋아요 목록에 있으면
     if user in article.like_users.all():
         article.like_users.remove(user)
+        liked = False
     else:
         article.like_users.add(user)
-    return redirect('articles:index')
+        liked = True
+    context = {
+        'liked': liked,
+        'count': article.like_users.count()
+    }
+    return JsonResponse(context)
 
 @login_required
 def recommend(request, article_pk):

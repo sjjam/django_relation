@@ -1,13 +1,9 @@
 {% if user in article.like_users.all %}
-  <a href="{% url 'articles:like' article.pk %}">
-    <i class="far fa-heart fa-lg text-danger"></i>
-  </a>
+  <i class="fas fa-heart fa-lg like-button" data-id="{{ article.id }}" style="color: crimson;"></i>
  {% else %}
-  <a href="{% url 'articles:like' article.pk %}">
-    <i class="fas fa-heart fa-lg text-danger"></i>
-  </a>
+  <i class="far fa-heart fa-lg like-button" data-id="{{ article.id }}" style="color: black;"></i>
  {% endif %}
- 좋아요 수 : {{ article.like_users.all|length }}
+ <span id="like-count-{{ article.pk }}">좋아요 수 : {{ article.like_users.all|length }}</span>
  <br>
  {% if user in article.recommend.all %}
   <a href="{% url 'articles:recommend' article.pk %}">
